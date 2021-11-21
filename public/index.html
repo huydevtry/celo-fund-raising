@@ -7,27 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Google material icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-        <style>
-            .fund-card {
-                padding: 5px;
-            }
-            .fund-image {
-                height: 12em;
-                overflow: hidden;
-            }
-            .fund-des {
-                height: 5em;
-                overflow: hidden;
-                
-                text-overflow: ellipsis; 
-            }
-        </style>
+    <style>
+        .fund-card {
+            padding: 5px;
+        }
+
+        .fund-image {
+            height: 12em;
+            overflow: hidden;
+        }
+
+        .fund-des {
+            height: 5em;
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+    </style>
     <title>Celo - Fundraising</title>
 </head>
 
@@ -54,66 +55,66 @@
         <div class="row" style="margin-top: 1rem;">
             <div class="alert alert-warning" role="alert">
                 <span id="notification">notification</span>
-              </div>
+            </div>
 
         </div>
 
         <!-- Add new -->
-        <div class="row" >
+        <div class="row">
             <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addNewFundModal">Add your project</button>
+                <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addNewFundModal">Add
+                    your project</button>
             </div>
         </div>
-      
+
         <!-- List fund -->
-        <div class="row" id="fund-list" style="margin-top: 10px;">
-        
-            
-        </div>
-     
+        <div class="row" id="fund-list" style="margin-top: 10px;"></div>
+
     </div>
 
     <!-- Modal add new fund -->
     <div class="modal fade" id="addNewFundModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add new project</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="prjName">
-                    <label for="projectName">Project name</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="prjImage" >
-                    <label for="prjImage">Image</label>
-                  </div>
-                  <div class="form-floating mb-3 ">
-                    <textarea class="form-control"  id="prjDescription" style="height: 100px"></textarea>
-                    <label for="prjDescription">Description</label>
-                  </div>
-                  <div class="row g-2">
-                    <div class="form-floating mb-3 col-md">
-                        <input type="date" class="form-control" id="prjEndDate" >
-                        <label for="prjEndDate">End date</label>
-                      </div>
-                      <div class="form-floating mb-3 col-md">
-                        <input type="text" class="form-control" id="prjTarget" >
-                        <label for="prjTarget">Target</label>
-                      </div>
-                  </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="addProject">Submit</button>
-          </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add new project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="prjName">
+                            <label for="projectName">Project name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="prjImage">
+                            <label for="prjImage">Image</label>
+                        </div>
+                        <div class="form-floating mb-3 ">
+                            <textarea class="form-control" id="prjDescription" style="height: 100px"></textarea>
+                            <label for="prjDescription">Description</label>
+                        </div>
+                        <div class="row g-2">
+                            <div class="form-floating mb-3 col-md">
+                                <input type="date" class="form-control" id="prjEndDate">
+                                <label for="prjEndDate">End date</label>
+                            </div>
+                            <div class="form-floating mb-3 col-md">
+                                <input type="text" class="form-control" id="prjTarget">
+                                <label for="prjTarget">Target</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        id="addProject">Submit</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+
 
     <!-- Optional JavaScript; choose one of the two! -->
 
