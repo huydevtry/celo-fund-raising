@@ -17,38 +17,38 @@ interface IERC20Token {
 contract fundraising {
     address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
 
-    struct Fund {
-        address payable donateAddress;
+    struct Project {
+        address payable owner;
         string name;
         string description;
         string image;
         string endDate;
-        uint funding;
+        uint target;
     }
     
-    mapping (uint => Fund) internal funds;
-    uint internal fundsCount = 0;
+    mapping (uint => Project) internal projects;
+    uint internal projectCount = 0;
 
     
-    function addFund (
+    function addProject(
 		string memory _name,
 		string memory _description, 
 		string memory _image,
-		string memory _endDate
+		string memory _endDate,
+		uint  _target
 		) public {
-        uint _funding = 0;
-		funds[fundsCount] = Fund(
+		projects[projectCount] = Project(
 			payable(msg.sender),
 			_name,
 			_description,
 			_image,
 			_endDate,
-			_funding
+			_target
 		);
-		fundsCount++;
+		projectCount++;
     }
     
-    function getFund(uint _index) public view returns (
+    function getProject(uint _index) public view returns (
 		address payable,
 		string memory, 
 		string memory, 
@@ -57,24 +57,24 @@ contract fundraising {
 		uint
 	) {
 		return (
-			funds[_index].donateAddress, 
-			funds[_index].name, 
-			funds[_index].description, 
-			funds[_index].image,
-			funds[_index].endDate,
-			funds[_index].funding
+			projects[_index].owner, 
+			projects[_index].name, 
+			projects[_index].description, 
+			projects[_index].image,
+			projects[_index].endDate,
+			projects[_index].target
 		);
 	}
 	
-	function getFundsCount() public view returns (uint) {
-	    return (fundsCount);
+	function getProjectCount() public view returns (uint) {
+	    return (projectCount);
 	}
 	
 	function donate(uint _index, uint _amount) public payable  {
 		require(
 		  IERC20Token(cUsdTokenAddress).transferFrom(
 			msg.sender,
-			funds[_index].donateAddress,
+			projects[_index].owner,
 			_amount
 		  ),
 		  "Transfer failed."
