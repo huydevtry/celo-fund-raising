@@ -2,27 +2,47 @@
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_index",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_image",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_endDate",
+				"type": "string"
 			}
 		],
-		"name": "buyProduct",
+		"name": "addFund",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getProductsLength",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "_index",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "donate",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -33,7 +53,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "readProduct",
+		"name": "getFund",
 		"outputs": [
 			{
 				"internalType": "address payable",
@@ -64,7 +84,15 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			},
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getFundsCount",
+		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
@@ -72,39 +100,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_image",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_location",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			}
-		],
-		"name": "writeProduct",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
