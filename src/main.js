@@ -5,7 +5,7 @@ import fundraisingAbi from '../contract/fundraising.abi.json'
 import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
-const MPContractAddress = "0xfb65566b4fEa0F919015E1fceCbA2e214f360524"
+const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -16,27 +16,35 @@ let projects = []
 
 //Render list project
 function renderProject() {
-    document.getElementById("fund-list").innerHTML = ""
-    projects.forEach((_project) => {
-        const newDiv = document.createElement("div")
-        newDiv.className = "col-lg-4 col-sm-6 fund-card"
-        newDiv.innerHTML = fundTemplate(_project)
-        document.getElementById("fund-list").appendChild(newDiv)
-    })
+  let _target = 0;
+  let _balance = 0;
+  document.getElementById("fund-list").innerHTML = ""
+  projects.forEach((_project) => {
+    _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+    _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+    const newDiv = document.createElement("div")
+    newDiv.className = "col-lg-4 col-sm-6 fund-card"
+    newDiv.innerHTML = fundTemplate(_project)
+    document.getElementById("fund-list").appendChild(newDiv)
+    //renderProgressBar(_balance, _target)
+  })
 }
 
 function fundTemplate(_project) {
+  const _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+  const _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+  const _progress = ((_balance/_target)*100).toFixed(2)
     return  `<div class="card">
                 <img src="${_project.image}" class="card-img-top fund-image" alt="...">
                 <div class="progress" style="margin: 1rem;">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;">25%</div>
+                    <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">${_progress}%</div>
                 </div>
                 <div class="row mb30" style="padding: 0 1rem;">
                     <div class="col-md-6" style="color: #01c632">
-                        <span> 25 </span> cUSD
+                        <span> ${_balance} </span> cUSD
                     </div>
                     <div class="col-md-6" style="text-align: right; color: #01c632">
-                        <span> ${_project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)}  </span> cUSD
+                        <span> ${_target}  </span> cUSD
                     </div>
                 </div>
                 <div class="card-body">
@@ -49,6 +57,13 @@ function fundTemplate(_project) {
             </div>`
 }
 
+//Render Progress bar
+function renderProgressBar(_amount, _target) {
+  let _progress = (_amount/_target)*100
+  _progress = _progress+"%"
+  document.getElementById("progressBar").innerHTML = _progress
+  document.getElementById("progressBar").setAttribute("style", "width: ${_progress};")
+}
 //Add project
 document
     .querySelector("#addProject")
@@ -122,6 +137,7 @@ const getProjects = async function() {
     for (let i = 0; i < _projectCount; i++) {
         let _project = new Promise(async (resolve, reject) => {
           let p = await contract.methods.getProject(i).call()
+          let balance = await contract.methods.getProjectBalance(i).call()
           resolve({
             index: i,
             owner: p[0],
@@ -130,11 +146,16 @@ const getProjects = async function() {
             image: p[3],
             endDate: p[4],
             target: new BigNumber(p[5]),
+            balance: new BigNumber(balance)
           })
         })
         _projects.push(_project)
+        // const _projectBalance = await contract.methods.getProjectBalance(i).call()
+        // projectBalances.push(_projectBalance)
       }
       projects = await Promise.all(_projects)
+      
+      
       renderProject()
     }
   
@@ -152,17 +173,20 @@ async function approve(_amount) {
 document.querySelector("#fund-list").addEventListener("click", async (e) => {
     if (e.target.className.includes("btnDonate")) {
       const index = e.target.id
-      const amount = document.getElementById("amountDonate").value
+      //const amount = document.getElementById("amountDonate").value
+      const amount = new BigNumber(document.getElementById("amountDonate").value)
+      .shiftedBy(ERC20_DECIMALS)
+      .toString()
       notification("⌛ Waiting for payment approval...")
       try {
-        await approve(parseInt(amount))
+        await approve(amount)
       } catch (error) {
         notification(`⚠️ ${error}.`)
       }
       notification(`⌛ Awaiting payment for "${projects[index].name}"...`)
       try {
         const result = await contract.methods
-          .donate(index, parseInt(amount))
+          .donate(index, amount)
           .send({ from: kit.defaultAccount })
         notification(`🎉 You successfully bought "${projects[index].name}".`)
         getProjects()

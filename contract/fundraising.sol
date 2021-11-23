@@ -27,8 +27,15 @@ contract fundraising {
     }
     
     mapping (uint => Project) internal projects;
+    mapping (uint => uint) internal projectBalances;
     uint internal projectCount = 0;
 
+    function increaseBalance(uint _index, uint _amount) public {
+        	projectBalances[_index] += _amount;
+    }
+    function getProjectBalance(uint _index) public view returns (uint) {
+        return (projectBalances[_index]);
+    }
     
     function addProject(
 		string memory _name,
@@ -79,6 +86,7 @@ contract fundraising {
 		  ),
 		  "Transfer failed."
 		);
+		projectBalances[_index] += _amount;
 	}
 	
     
