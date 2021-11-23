@@ -26,7 +26,6 @@ function renderProject() {
     newDiv.className = "col-lg-4 col-sm-6 fund-card"
     newDiv.innerHTML = fundTemplate(_project)
     document.getElementById("fund-list").appendChild(newDiv)
-    //renderProgressBar(_balance, _target)
   })
 }
 
@@ -49,7 +48,9 @@ function fundTemplate(_project) {
                 </div>
                 <div class="card-body">
                 <h5 class="card-title">${_project.name}</h5>
-                <div class="probootstrap-date" style="argin-bottom: 0.5rem; color: #b3b2b2;" >2 days remain</div>
+                <div class="probootstrap-date" style="argin-bottom: 0.5rem; color: #b3b2b2;">
+                  <ion-icon name="time"></ion-icon>${_project.endDate} 
+                </div>
                 <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
                 <input type="number" name="amountDonate" value="1" id="amountDonate">
                 <a href="#" class="btn btnDonate btn-warning" id=${_project.index} data-bs-toggle="modal" data-bs-target="#confirmDonate">Donate</a>
@@ -57,13 +58,6 @@ function fundTemplate(_project) {
             </div>`
 }
 
-//Render Progress bar
-function renderProgressBar(_amount, _target) {
-  let _progress = (_amount/_target)*100
-  _progress = _progress+"%"
-  document.getElementById("progressBar").innerHTML = _progress
-  document.getElementById("progressBar").setAttribute("style", "width: ${_progress};")
-}
 //Add project
 document
     .querySelector("#addProject")
@@ -93,8 +87,8 @@ document
 
 //Notification handle
 function notification(_text) {
-    document.querySelector(".alert").style.display = "block"
-    document.querySelector("#notification").textContent = _text
+  document.querySelector(".alert").style.display = "block"
+  document.querySelector("#notification").textContent = _text
 }
 
 function notificationOff() {
