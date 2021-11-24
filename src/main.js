@@ -62,33 +62,49 @@ function fundTemplate(_project) {
 document
     .querySelector("#addProject")
     .addEventListener("click", async (e) => {
-        const params = [
-            document.getElementById("prjName").value,
-            document.getElementById("prjDescription").value,
-            document.getElementById("prjImage").value,
-            document.getElementById("prjEndDate").value,
-            new BigNumber(document.getElementById("prjTarget").value)
-                .shiftedBy(ERC20_DECIMALS)
-                .toString()
+        const prjName = document.getElementById("prjName").value
+        const prjDescription = document.getElementById("prjDescription").value
+        const prjImage = document.getElementById("prjImage").value
+        const prjEndDate = document.getElementById("prjEndDate").value
+        const prjTarget = document.getElementById("prjTarget").value
+        if (prjName == "" || prjDescription == "" || prjImage == "" || prjEndDate == "" ||
+            prjTarget == "" ) {
+            notification(`Input invalid. Please try again!!`, 'error')
+            return
+        }
+        
+        try {
+          const params = [
+            prjName,
+            prjDescription,
+            prjImage,
+            prjEndDate,
+            new BigNumber(prjTarget).shiftedBy(ERC20_DECIMALS).toString()
         ]
         notification(`⌛ Adding "${params[0]}"...`)
-        try {
             const result = await contract.methods
                 .addProject(...params)
                 .send({ from: kit.defaultAccount })
         } catch (error) {
             notification(`⚠️ ${error}.`)
         }
-        notification(`🎉 You successfully added "${params[0]}".`)
+        notification(`You successfully added project "${params[0]}".`, 'success')
         getProjects()
 
     })
 
 
 //Notification handle
-function notification(_text) {
+function notification(_text, type = 'warning') {
   document.querySelector(".alert").style.display = "block"
   document.querySelector("#notification").textContent = _text
+
+  if (type == "success") {
+    document.querySelector(".alert").className = 'alert alert-success'
+  }
+  if (type == "error") {
+    document.querySelector(".alert").className = 'alert alert-danger'
+  }
 }
 
 function notificationOff() {
@@ -99,7 +115,7 @@ function notificationOff() {
 const connectCeloWallet = async function () {
     if (window.celo) {
       try {
-        notification("⚠️ Please approve this DApp to use it.")
+        notification("Please approve this DApp to use it.")
         await window.celo.enable()
         notificationOff()
         const web3 = new Web3(window.celo)
@@ -110,7 +126,7 @@ const connectCeloWallet = async function () {
   
         contract = new kit.web3.eth.Contract(fundraisingAbi, MPContractAddress)
       } catch (error) {
-        notification(`⚠️ ${error}.`)
+        notification(`⚠️ ${error}.`, 'error')
       }
     } else {
       notification("⚠️ Please install the CeloExtensionWallet.")
@@ -144,12 +160,8 @@ const getProjects = async function() {
           })
         })
         _projects.push(_project)
-        // const _projectBalance = await contract.methods.getProjectBalance(i).call()
-        // projectBalances.push(_projectBalance)
       }
       projects = await Promise.all(_projects)
-      
-      
       renderProject()
     }
   
@@ -170,24 +182,24 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
       const amount = new BigNumber(document.getElementById("amountDonate-"+index).value)
       .shiftedBy(ERC20_DECIMALS)
       .toString()
-      notification("⌛ Waiting for payment approval...")
+      notification("Waiting for payment approval...")
       try {
         await approve(amount)
       } catch (error) {
-        notification(`⚠️ ${error}.`)
+        notification(`⚠️ ${error}.`, 'error')
       }
       notification(`⌛ Awaiting payment for "${projects[index].name}"...`)
       try {
         const result = await contract.methods
           .donate(index, amount)
           .send({ from: kit.defaultAccount })
-        notification(`🎉 You successfully donate for "${projects[index].name}".`)
+        notification(`You successfully donate for "${projects[index].name}".`, 'success')
         //clear amout value
         document.getElementById("amountDonate-"+index).value = "";
         getProjects()
         getBalance()
       } catch (error) {
-        notification(`⚠️ ${error}.`)
+        notification(`⚠️ ${error}.`, 'error')
       }
     }
   })
