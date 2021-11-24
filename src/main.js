@@ -5,7 +5,7 @@ import fundraisingAbi from '../contract/fundraising.abi.json'
 import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
-const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
+const MPContractAddress = "0x6c11b814D3fb27207b0b73923b922DBfD6E0fD10"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -203,6 +203,7 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
       }
     }
   })
+//Date format 
 
 window.addEventListener('load', async () => {
     notification("⌛ Loading...")
