@@ -52,7 +52,7 @@ function fundTemplate(_project) {
                   <ion-icon name="time"></ion-icon>${_project.endDate} 
                 </div>
                 <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
-                <input type="number" name="amountDonate" value="1" id="amountDonate">
+                <input type="number" name="amountDonate" value="" id="amountDonate-${_project.index}">
                 <a href="#" class="btn btnDonate btn-warning" id=${_project.index} data-bs-toggle="modal" data-bs-target="#confirmDonate">Donate</a>
                 </div>
             </div>`
@@ -167,8 +167,7 @@ async function approve(_amount) {
 document.querySelector("#fund-list").addEventListener("click", async (e) => {
     if (e.target.className.includes("btnDonate")) {
       const index = e.target.id
-      //const amount = document.getElementById("amountDonate").value
-      const amount = new BigNumber(document.getElementById("amountDonate").value)
+      const amount = new BigNumber(document.getElementById("amountDonate-"+index).value)
       .shiftedBy(ERC20_DECIMALS)
       .toString()
       notification("⌛ Waiting for payment approval...")
@@ -182,7 +181,9 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
         const result = await contract.methods
           .donate(index, amount)
           .send({ from: kit.defaultAccount })
-        notification(`🎉 You successfully bought "${projects[index].name}".`)
+        notification(`🎉 You successfully donate for "${projects[index].name}".`)
+        //clear amout value
+        document.getElementById("amountDonate-"+index).value = "";
         getProjects()
         getBalance()
       } catch (error) {
