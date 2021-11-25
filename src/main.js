@@ -5,7 +5,8 @@ import fundraisingAbi from '../contract/fundraising.abi.json'
 import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
-const MPContractAddress = "0x6c11b814D3fb27207b0b73923b922DBfD6E0fD10"
+//const MPContractAddress = "0x6c11b814D3fb27207b0b73923b922DBfD6E0fD10" 
+const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -33,27 +34,47 @@ function fundTemplate(_project) {
   const _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
   const _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
   const _progress = ((_balance/_target)*100).toFixed(2)
+  let donateSection
+  //Check deadline
+  if (isEndProject(_project.endDate) == true) {
+    donateSection = `<div class="alert alert-secondary" role="alert" style="margin-bottom: 0;">
+                        Project has ended!
+                      </div>`
+  } else {
+    donateSection = `<div class="row">
+                      <div class="col" style="width: 50%">
+                        <input class="form-control" type="number" name="amountDonate" value="" id="amountDonate-${_project.index}">
+                      </div>
+                      <div class="col" style="width: 50%">
+                        <a class="btn btnDonate btn-warning" id=${_project.index} data-bs-toggle="modal"
+                        data-bs-target="#confirmDonate">Donate</a>
+                      </div>
+                    </div>`
+  }
+
     return  `<div class="card">
                 <img src="${_project.image}" class="card-img-top fund-image" alt="...">
                 <div class="progress" style="margin: 1rem;">
-                    <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">${_progress}%</div>
+                    <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">
+                        ${_progress}%</div>
                 </div>
                 <div class="row mb30" style="padding: 0 1rem;">
                     <div class="col-md-6" style="color: #01c632">
                         <span> ${_balance} </span> cUSD
                     </div>
                     <div class="col-md-6" style="text-align: right; color: #01c632">
-                        <span> ${_target}  </span> cUSD
+                        <span> ${_target} </span> cUSD
                     </div>
                 </div>
                 <div class="card-body">
-                <h5 class="card-title">${_project.name}</h5>
-                <div class="probootstrap-date" style="argin-bottom: 0.5rem; color: #b3b2b2;">
-                  <ion-icon name="time"></ion-icon>${_project.endDate} 
-                </div>
-                <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
-                <input type="number" name="amountDonate" value="" id="amountDonate-${_project.index}">
-                <a href="#" class="btn btnDonate btn-warning" id=${_project.index} data-bs-toggle="modal" data-bs-target="#confirmDonate">Donate</a>
+                    <h5 class="card-title">${_project.name}</h5>
+                    <div class="probootstrap-date" style="margin-bottom: 0.5rem; color: #b3b2b2;">
+                        <ion-icon name="time"></ion-icon>${_project.endDate}
+                    </div>
+                    <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
+                      ${donateSection}
+                    </div>
+                    
                 </div>
             </div>`
 }
@@ -179,6 +200,15 @@ async function approve(_amount) {
 document.querySelector("#fund-list").addEventListener("click", async (e) => {
     if (e.target.className.includes("btnDonate")) {
       const index = e.target.id
+
+      //Check deadline
+      const endDate = new Date(projects[index].endDate).getTime()
+      const today = new Date().getTime()
+      if (endDate <= today) {
+        notification(`⚠️ The project has end. Thank you very much!`, 'success')
+        return
+      }
+
       const amount = new BigNumber(document.getElementById("amountDonate-"+index).value)
       .shiftedBy(ERC20_DECIMALS)
       .toString()
@@ -203,7 +233,16 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
       }
     }
   })
-//Date format 
+
+//Check end date
+const isEndProject = (_endDate) => {
+  const today = new Date().toISOString().split('T')[0]
+  if ((new Date(_endDate).getTime()) < (new Date(today).getTime())) {
+    return true
+  } else {
+    return false
+  }
+} 
 
 window.addEventListener('load', async () => {
     notification("⌛ Loading...")
