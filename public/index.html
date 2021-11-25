@@ -18,16 +18,19 @@
         }
 
         .fund-image {
+            object-fit: cover;
             height: 12em;
             overflow: hidden;
         }
 
         .fund-des {
-            height: 5em;
+            display: -webkit-box;
+            min-height: 72px;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-
-            text-overflow: ellipsis;
         }
+
     </style>
     <title>Celo - Fundraising</title>
 </head>
@@ -48,9 +51,9 @@
     <div class="container">
 
         <!-- Alert -->
-        <div class="row" style="margin-top: 1rem;">
-            <div class="alert alert-warning" role="alert">
-                <span id="notification">notification</span>
+        <div class="row" style="margin-top: 1rem;" id="alert" >
+            <div class="alert alert-primary" role="alert">
+                <span id="notification">Loading...</span>
             </div>
 
         </div>
@@ -63,7 +66,7 @@
             </div>
         </div>
 
-        <!-- List fund -->
+        <!-- List project -->
         <div class="row" id="fund-list" style="margin-top: 10px;"></div>
 
     </div>

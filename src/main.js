@@ -20,9 +20,13 @@ function renderProject() {
   let _target = 0;
   let _balance = 0;
   document.getElementById("fund-list").innerHTML = ""
+  //Sort project by end date
+  // projects.sort(function(a,b){
+  //   return new Date(b.endDate) - new Date(a.endDate);
+  // })
   projects.forEach((_project) => {
-    _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
-    _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+    // _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+    // _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
     const newDiv = document.createElement("div")
     newDiv.className = "col-lg-4 col-sm-6 fund-card"
     newDiv.innerHTML = fundTemplate(_project)
@@ -37,8 +41,8 @@ function fundTemplate(_project) {
   let donateSection
   //Check deadline
   if (isEndProject(_project.endDate) == true) {
-    donateSection = `<div class="alert alert-secondary" role="alert" style="margin-bottom: 0;">
-                        Project has ended!
+    donateSection = `<div class="row">
+                        <h5 style="color: #b3b2b2"> Project has ended!</h5>
                       </div>`
   } else {
     donateSection = `<div class="row">
@@ -68,8 +72,8 @@ function fundTemplate(_project) {
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">${_project.name}</h5>
-                    <div class="probootstrap-date" style="margin-bottom: 0.5rem; color: #b3b2b2;">
-                        <ion-icon name="time"></ion-icon>${_project.endDate}
+                    <div class="probootstrap-date" style="margin-bottom: 0.5rem; color: #b3b2b2; display: flex; align-items: center;">
+                        <ion-icon name="time" style="margin-right: 0.5rem;" ></ion-icon>${_project.endDate}
                     </div>
                     <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
                       ${donateSection}
@@ -116,7 +120,7 @@ document
 
 
 //Notification handle
-function notification(_text, type = 'warning') {
+function notification(_text, type = 'info') {
   document.querySelector(".alert").style.display = "block"
   document.querySelector("#notification").textContent = _text
 
