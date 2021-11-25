@@ -5,28 +5,20 @@ import fundraisingAbi from '../contract/fundraising.abi.json'
 import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
-//const MPContractAddress = "0x6c11b814D3fb27207b0b73923b922DBfD6E0fD10" 
-const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
+const MPContractAddress = "0x6c11b814D3fb27207b0b73923b922DBfD6E0fD10" 
+//const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
 let contract
 let projects = []
 
-
-
 //Render list project
 function renderProject() {
   let _target = 0;
   let _balance = 0;
   document.getElementById("fund-list").innerHTML = ""
-  //Sort project by end date
-  // projects.sort(function(a,b){
-  //   return new Date(b.endDate) - new Date(a.endDate);
-  // })
   projects.forEach((_project) => {
-    // _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
-    // _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
     const newDiv = document.createElement("div")
     newDiv.className = "col-lg-4 col-sm-6 fund-card"
     newDiv.innerHTML = fundTemplate(_project)
@@ -34,9 +26,11 @@ function renderProject() {
   })
 }
 
+//Template project
 function fundTemplate(_project) {
   const _balance = _project.balance.shiftedBy(-ERC20_DECIMALS).toFixed(2)
   const _target = _project.target.shiftedBy(-ERC20_DECIMALS).toFixed(2)
+  //Progress bar
   const _progress = ((_balance/_target)*100).toFixed(2)
   let donateSection
   //Check deadline
@@ -55,8 +49,7 @@ function fundTemplate(_project) {
                       </div>
                     </div>`
   }
-
-    return  `<div class="card">
+  return  `<div class="card">
                 <img src="${_project.image}" class="card-img-top fund-image" alt="...">
                 <div class="progress" style="margin: 1rem;">
                     <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">
@@ -87,37 +80,45 @@ function fundTemplate(_project) {
 document
     .querySelector("#addProject")
     .addEventListener("click", async (e) => {
-        const prjName = document.getElementById("prjName").value
-        const prjDescription = document.getElementById("prjDescription").value
-        const prjImage = document.getElementById("prjImage").value
-        const prjEndDate = document.getElementById("prjEndDate").value
-        const prjTarget = document.getElementById("prjTarget").value
-        if (prjName == "" || prjDescription == "" || prjImage == "" || prjEndDate == "" ||
-            prjTarget == "" ) {
-            notification(`Input invalid. Please try again!!`, 'error')
-            return
-        }
+      //Receive form data
+      const prjName = document.getElementById("prjName").value
+      const prjDescription = document.getElementById("prjDescription").value
+      const prjImage = document.getElementById("prjImage").value
+      const prjEndDate = document.getElementById("prjEndDate").value
+      const prjTarget = document.getElementById("prjTarget").value
+      if (prjName == "" || prjDescription == "" || prjImage == "" || prjEndDate == "" ||
+          prjTarget == "" ) {
+          notification(`Please fill in all the required fields.`, 'error')
+          return
+      }
         
-        try {
-          const params = [
-            prjName,
-            prjDescription,
-            prjImage,
-            prjEndDate,
-            new BigNumber(prjTarget).shiftedBy(ERC20_DECIMALS).toString()
-        ]
-        notification(`⌛ Adding "${params[0]}"...`)
-            const result = await contract.methods
-                .addProject(...params)
-                .send({ from: kit.defaultAccount })
-        } catch (error) {
-            notification(`⚠️ ${error}.`)
-        }
-        notification(`You successfully added project "${params[0]}".`, 'success')
-        getProjects()
+      try {
+        const params = [
+          prjName,
+          prjDescription,
+          prjImage,
+          prjEndDate,
+          new BigNumber(prjTarget).shiftedBy(ERC20_DECIMALS).toString()
+      ]
+      //Call function add project
+      notification(`Adding "${params[0]}"...`)
+          const result = await contract.methods
+              .addProject(...params)
+              .send({ from: kit.defaultAccount })
+      } catch (error) {
+          notification(`${error}.`)
+      }
+      notification(`You successfully added project "${prjName}".`, 'success')
+
+      //Reset form
+      document.getElementById("prjName").value = ""
+      document.getElementById("prjDescription").value = ""
+      document.getElementById("prjImage").value = ""
+      document.getElementById("prjEndDate").value = ""
+      document.getElementById("prjTarget").value = ""
+      getProjects()
 
     })
-
 
 //Notification handle
 function notification(_text, type = 'info') {
@@ -129,6 +130,9 @@ function notification(_text, type = 'info') {
   }
   if (type == "error") {
     document.querySelector(".alert").className = 'alert alert-danger'
+  }
+  if (type == "info") {
+    document.querySelector(".alert").className = 'alert alert-primary'
   }
 }
 
@@ -171,7 +175,9 @@ const getProjects = async function() {
     const _projects = []
     for (let i = 0; i < _projectCount; i++) {
         let _project = new Promise(async (resolve, reject) => {
+          //Project information
           let p = await contract.methods.getProject(i).call()
+          //Project balance
           let balance = await contract.methods.getProjectBalance(i).call()
           resolve({
             index: i,
@@ -206,35 +212,38 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
       const index = e.target.id
 
       //Check deadline
-      const endDate = new Date(projects[index].endDate).getTime()
-      const today = new Date().getTime()
-      if (endDate <= today) {
-        notification(`⚠️ The project has end. Thank you very much!`, 'success')
+      
+      if (isEndProject(projects[index].endDate)) {
+        notification(`The project has end. Thank you very much!`, 'info')
         return
       }
 
+      //Get amount donate
       const amount = new BigNumber(document.getElementById("amountDonate-"+index).value)
       .shiftedBy(ERC20_DECIMALS)
       .toString()
-      notification("Waiting for payment approval...")
+
+      notification("Waiting for payment approval...", 'info')
       try {
         await approve(amount)
       } catch (error) {
-        notification(`⚠️ ${error}.`, 'error')
+        notification(`${error}.`, 'error')
       }
-      notification(`⌛ Awaiting payment for "${projects[index].name}"...`)
+      notification(`Awaiting payment for "${projects[index].name}"...`)
       try {
+        //Call function donate
         const result = await contract.methods
           .donate(index, amount)
           .send({ from: kit.defaultAccount })
         notification(`You successfully donate for "${projects[index].name}".`, 'success')
-        //clear amout value
+        //clear amout value in form
         document.getElementById("amountDonate-"+index).value = "";
         getProjects()
         getBalance()
       } catch (error) {
         notification(`⚠️ ${error}.`, 'error')
       }
+      getProjects()
     }
   })
 
