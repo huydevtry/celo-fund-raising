@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js"
 import fundraisingAbi from '../contract/fundraising.abi.json'
 import erc20Abi from "../contract/erc20.abi.json"
 
+
 const ERC20_DECIMALS = 18
 const MPContractAddress = "0x5FdB307713eb13995592F6Ec53F0dC84Ea15FbB5"
 //const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
@@ -55,11 +56,11 @@ function fundTemplate(_project) {
                     <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">
                         ${_progress}%</div>
                 </div>
-                <div class="row mb30" style="padding: 0 1rem;">
-                    <div class="col-md-6 d-flex align-items-center" style="color: #01c632">
+                <div class="row mb30 d-flex flex-wrap" style="padding: 0 1rem;">
+                    <div class="col-6 d-flex align-items-center" style="color: #01c632">
                         <span> ${_balance} </span> cUSD
                     </div>
-                    <div class="col-md-6 d-flex align-items-center" style="text-align: right; color: #01c632">
+                    <div class="col-6 d-flex align-items-center justify-content-end" style="text-align: right; color: #01c632">
                         <span> ${_target} </span> cUSD
                     </div>
                 </div>
@@ -75,6 +76,13 @@ function fundTemplate(_project) {
                 </div>
             </div>`
 }
+
+document.querySelector("#connectWallet").addEventListener("click", async () => {
+  await connectCeloWallet()
+  await getBalance()
+  await getProjects()
+})
+
 
 //Add project
 document
@@ -144,6 +152,9 @@ function notificationOff() {
 const connectCeloWallet = async function () {
   if (window.celo) {
     try {
+      //Show conenct wallet button
+      document.getElementById('connectWallet').style.display = "block"
+      //document.getElementById('balance').style.display = "none"
       notification("Please approve this DApp to use it.")
       await window.celo.enable()
       notificationOff()
@@ -154,6 +165,7 @@ const connectCeloWallet = async function () {
       kit.defaultAccount = accounts[0]
 
       contract = new kit.web3.eth.Contract(fundraisingAbi, MPContractAddress)
+      document.getElementById('connectWallet').style.display = "none"
     } catch (error) {
       notification(`⚠️ ${error}.`, 'error')
     }
@@ -166,7 +178,9 @@ const connectCeloWallet = async function () {
 const getBalance = async function () {
   const totalBalance = await kit.getTotalBalance(kit.defaultAccount)
   const cUSDBalance = totalBalance.cUSD.shiftedBy(-ERC20_DECIMALS).toFixed(2)
-  document.querySelector("#balance").textContent = cUSDBalance
+  document.querySelector("#balance").textContent = cUSDBalance + " cUSD"
+  document.querySelector('#balance').style.display = "block"
+
 }
 
 //Get Projects
@@ -255,12 +269,10 @@ const isEndProject = (_endDate) => {
   }
 }
 
-window.addEventListener('load', async () => {
-  notification("⌛ Loading...")
-  await connectCeloWallet()
-  await getBalance()
-  // notification("⌛ test func...")
-  // await test(0, 2)
-  await getProjects()
-  notificationOff()
-});
+//window.addEventListener('load', async () => {
+  // notification("⌛ Loading...")
+  // await connectCeloWallet()
+  // await getBalance()
+  // await getProjects()
+  // notificationOff()
+//});
