@@ -18,15 +18,17 @@
         }
 
         .fund-image {
+            object-fit: cover;
             height: 12em;
             overflow: hidden;
         }
 
         .fund-des {
-            height: 5em;
+            display: -webkit-box;
+            min-height: 72px;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-
-            text-overflow: ellipsis;
         }
     </style>
     <title>Celo - Fundraising</title>
@@ -38,19 +40,19 @@
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand" href="#">Simple Fundraising</a>
-            
+
             <!-- Balance -->
-            <div class="btn btn-outline-secondary"><span id="balance">0</span> cUSD</div>
+            <div class="btn btn-outline-secondary" id="connectWallet">Connect Wallet</div>
+            <div class="btn btn-outline-secondary" id="balance" style="display: none;"></div>
         </div>
     </nav>
 
     <!-- Body -->
     <div class="container">
-
         <!-- Alert -->
-        <div class="row" style="margin-top: 1rem;">
-            <div class="alert alert-warning" role="alert">
-                <span id="notification">notification</span>
+        <div class="row" style="margin-top: 1rem;" id="alert">
+            <div class="alert alert-primary" role="alert">
+                <span id="notification"></span>
             </div>
 
         </div>
@@ -63,9 +65,8 @@
             </div>
         </div>
 
-        <!-- List fund -->
+        <!-- List project -->
         <div class="row" id="fund-list" style="margin-top: 10px;"></div>
-
     </div>
 
     <!-- Modal add new fund -->
@@ -104,29 +105,16 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="addProject">Submit</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        id="addProject">Submit</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-    <!-- Optional JavaScript; choose one of the two! -->
-
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    -->
-
     <!-- ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
