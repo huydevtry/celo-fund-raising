@@ -1,3 +1,8 @@
+# Celo Fundraising Dapp
+
+## Description
+Celo Fundraising Dapp is a platform where users can submit their Fundraising project and receive donations from community. Dapp using Celo block chain and cUSD for donations.
+
 # Install
 
 ```
