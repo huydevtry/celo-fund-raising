@@ -150,6 +150,7 @@ function notificationOff() {
 
 //Connect Wallet
 const connectCeloWallet = async function () {
+  notification("Connecting...", 'info')
   if (window.celo) {
     try {
       //Show conenct wallet button
