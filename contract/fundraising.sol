@@ -24,18 +24,11 @@ contract fundraising {
         string image;
         string endDate;
         uint target;
+		uint amount;
     }
     
     mapping (uint => Project) internal projects;
-    mapping (uint => uint) internal projectBalances;
     uint internal projectCount = 0;
-
-    function increaseBalance(uint _index, uint _amount) public {
-        	projectBalances[_index] += _amount;
-    }
-    function getProjectBalance(uint _index) public view returns (uint) {
-        return (projectBalances[_index]);
-    }
     
     function addProject(
 		string memory _name,
@@ -44,15 +37,22 @@ contract fundraising {
 		string memory _endDate,
 		uint  _target
 		) public {
-		projects[projectCount] = Project(
-			payable(msg.sender),
-			_name,
-			_description,
-			_image,
-			_endDate,
-			_target
-		);
-		projectCount++;
+			require(bytes(_name).length > 0, "Project name is not empty");
+			require(bytes(_description).length > 0, "Project description is not empty");
+			require(bytes(_image).length > 0, "Project image is not empty");
+			require(bytes(_endDate).length > 0, "Project end date is not empty");
+			require(_target > 0, "Project target is invalid");
+			uint _amount = 0;
+			projects[projectCount] = Project(
+				payable(msg.sender),
+				_name,
+				_description,
+				_image,
+				_endDate,
+				_target,
+				_amount
+			);
+			projectCount++;
     }
     
     function getProject(uint _index) public view returns (
@@ -61,6 +61,7 @@ contract fundraising {
 		string memory, 
 		string memory, 
 		string memory, 
+		uint,
 		uint
 	) {
 		return (
@@ -69,7 +70,8 @@ contract fundraising {
 			projects[_index].description, 
 			projects[_index].image,
 			projects[_index].endDate,
-			projects[_index].target
+			projects[_index].target,
+			projects[_index].amount
 		);
 	}
 	
@@ -78,16 +80,15 @@ contract fundraising {
 	}
 	
 	function donate(uint _index, uint _amount) public payable  {
+		require(_amount > 0, "Amount donate invalid");
 		require(
 		  IERC20Token(cUsdTokenAddress).transferFrom(
 			msg.sender,
 			projects[_index].owner,
-			_amount
+			projects[_index].amount += _amount
 		  ),
 		  "Transfer failed."
 		);
-		projectBalances[_index] += _amount;
 	}
-	
     
 }
