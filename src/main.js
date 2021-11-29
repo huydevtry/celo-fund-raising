@@ -6,8 +6,7 @@ import erc20Abi from "../contract/erc20.abi.json"
 
 
 const ERC20_DECIMALS = 18
-const MPContractAddress = "0x5FdB307713eb13995592F6Ec53F0dC84Ea15FbB5"
-//const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
+const MPContractAddress = "0x65C7325e87682E9DAE41CF961EF9f8ba4662807A"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -78,8 +77,13 @@ function fundTemplate(_project) {
 }
 
 document.querySelector("#connectWallet").addEventListener("click", async () => {
+  //Connect Wallet
   await connectCeloWallet()
+  //Show "Add project" button
+  document.getElementById('addPrjSection').style.display = "block"
+  //Get balance
   await getBalance()
+  //Get list project
   await getProjects()
 })
 
@@ -155,7 +159,6 @@ const connectCeloWallet = async function () {
     try {
       //Show conenct wallet button
       document.getElementById('connectWallet').style.display = "block"
-      //document.getElementById('balance').style.display = "none"
       notification("Please approve this DApp to use it.")
       await window.celo.enable()
       notificationOff()
@@ -168,10 +171,10 @@ const connectCeloWallet = async function () {
       contract = new kit.web3.eth.Contract(fundraisingAbi, MPContractAddress)
       document.getElementById('connectWallet').style.display = "none"
     } catch (error) {
-      notification(`⚠️ ${error}.`, 'error')
+      notification(`${error}.`, 'error')
     }
   } else {
-    notification("⚠️ Please install the CeloExtensionWallet.")
+    notification("Please install the CeloExtensionWallet.")
   }
 }
 
@@ -270,10 +273,14 @@ const isEndProject = (_endDate) => {
   }
 }
 
-//window.addEventListener('load', async () => {
-  // notification("⌛ Loading...")
-  // await connectCeloWallet()
-  // await getBalance()
-  // await getProjects()
-  // notificationOff()
-//});
+// window.addEventListener('load', async () => {
+//   kit = newKitFromWeb3(web3)
+//   alert(kit.defaultAccount)
+//   if (empty(kit.defaultAccount)) {
+//     notification("Connect your celo wallet to continue", 'info')
+//   } else {
+//     await getBalance()
+//     await getProjects()
+//     notificationOff()
+//   }
+// });
