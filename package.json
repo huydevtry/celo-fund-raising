@@ -13,6 +13,7 @@
   },
   "scripts": {
     "dev": "node index.js",
-    "build": "webpack"
+    "build": "webpack",
+    "start": "node index.js"
   }
 }
