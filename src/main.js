@@ -6,7 +6,7 @@ import erc20Abi from "../contract/erc20.abi.json"
 
 
 const ERC20_DECIMALS = 18
-const MPContractAddress = "0x65C7325e87682E9DAE41CF961EF9f8ba4662807A"
+const MPContractAddress = "0x230aeDbb9485dd0a11763177cB68C53B6973958B"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -251,10 +251,6 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
         .donate(index, amount)
         .send({ from: kit.defaultAccount })
       notification(`You successfully donate for "${projects[index].name}".`, 'success')
-      //clear amout value in form
-      document.getElementById("amountDonate-" + index).value = "";
-      getProjects()
-      getBalance()
     } catch (error) {
       notification(`⚠️ ${error}.`, 'error')
     }
@@ -262,6 +258,14 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
   }
 })
 
+//reload page state
+// const reState = (_index) => {
+//   alert ("function restate ")
+//   //clear amout value in form
+//   document.getElementById("amountDonate-" + _index).value = "";
+//   getProjects()
+//   getBalance()
+// }
 
 //Check end date
 const isEndProject = (_endDate) => {
