@@ -42,25 +42,25 @@
             <a class="navbar-brand" href="#">Simple Fundraising</a>
 
             <!-- Balance -->
-            <div class="btn btn-outline-secondary" id="connectWallet">Connect Wallet</div>
-            <div class="btn btn-outline-secondary" id="balance" style="display: none;"></div>
+            <div class="btn btn-outline-secondary"><span id="balance">0</span> cUSD</div>
         </div>
     </nav>
 
     <!-- Body -->
     <div class="container">
+
         <!-- Alert -->
         <div class="row" style="margin-top: 1rem;" id="alert">
             <div class="alert alert-primary" role="alert">
-                <span id="notification">Connect your celo wallet</span>
+                <span id="notification">Loading...</span>
             </div>
 
         </div>
 
         <!-- Add new -->
-        <div class="row" id="addPrjSection" style="display: none;">
+        <div class="row">
             <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-dark"  type="button" data-bs-toggle="modal" data-bs-target="#addNewFundModal">Add
+                <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addNewFundModal">Add
                     your project</button>
             </div>
         </div>
