@@ -6,7 +6,6 @@ import erc20Abi from "../contract/erc20.abi.json"
 
 const ERC20_DECIMALS = 18
 const MPContractAddress = "0x6c11b814D3fb27207b0b73923b922DBfD6E0fD10" 
-//const MPContractAddress = "0x4E4E5062757Af18Eae40D0bF6a0bc70786176292"
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"
 
 let kit
@@ -50,29 +49,29 @@ function fundTemplate(_project) {
                     </div>`
   }
   return  `<div class="card">
-                <img src="${_project.image}" class="card-img-top fund-image" alt="...">
-                <div class="progress" style="margin: 1rem;">
-                    <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">
-                        ${_progress}%</div>
-                </div>
-                <div class="row mb30" style="padding: 0 1rem;">
-                    <div class="col-md-6" style="color: #01c632">
-                        <span> ${_balance} </span> cUSD
-                    </div>
-                    <div class="col-md-6" style="text-align: right; color: #01c632">
-                        <span> ${_target} </span> cUSD
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">${_project.name}</h5>
-                    <div class="probootstrap-date" style="margin-bottom: 0.5rem; color: #b3b2b2; display: flex; align-items: center;">
-                        <ion-icon name="time" style="margin-right: 0.5rem;" ></ion-icon>${_project.endDate}
-                    </div>
-                    <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
-                      ${donateSection}
-                    </div>
-                    
-                </div>
+              <img src="${_project.image}" class="card-img-top fund-image" alt="...">
+              <div class="progress" style="margin: 1rem;">
+                  <div class="progress-bar bg-warning" role="progressbar" id="progressBar" style="width: ${_progress}%;">
+                      ${_progress}%</div>
+              </div>
+              <div class="row mb30 d-flex flex-wrap" style="padding: 0 1rem;">
+                  <div class="col-6 d-flex align-items-center" style="color: #01c632">
+                      <span> ${_balance} </span> cUSD
+                  </div>
+                  <div class="col-6 d-flex align-items-center justify-content-end" style="text-align: right; color: #01c632">
+                      <span> ${_target} </span> cUSD
+                  </div>
+              </div>
+              <div class="card-body">
+                  <h5 class="card-title">${_project.name}</h5>
+                  <div class="probootstrap-date" style="margin-bottom: 0.5rem; color: #b3b2b2; display: flex; align-items: center;">
+                      <ion-icon name="time" style="margin-right: 0.5rem;" ></ion-icon>${_project.endDate}
+                  </div>
+                  <p class="card-text fund-des" style="color: #646262;">${_project.description}</p>
+                    ${donateSection}
+                  </div>
+                  
+              </div>
             </div>`
 }
 
@@ -212,7 +211,6 @@ document.querySelector("#fund-list").addEventListener("click", async (e) => {
       const index = e.target.id
 
       //Check deadline
-      
       if (isEndProject(projects[index].endDate)) {
         notification(`The project has end. Thank you very much!`, 'info')
         return

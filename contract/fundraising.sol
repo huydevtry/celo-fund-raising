@@ -26,13 +26,18 @@ contract fundraising {
         uint target;
     }
     
+	//Storage list project
     mapping (uint => Project) internal projects;
+	//Storage balance of project
     mapping (uint => uint) internal projectBalances;
     uint internal projectCount = 0;
 
-    function increaseBalance(uint _index, uint _amount) public {
+	//Increase balance of project
+    function increaseBalance(uint _index, uint _amount) internal {
         	projectBalances[_index] += _amount;
     }
+
+	//Get balance of project
     function getProjectBalance(uint _index) public view returns (uint) {
         return (projectBalances[_index]);
     }
@@ -73,10 +78,12 @@ contract fundraising {
 		);
 	}
 	
+	//Get number of project
 	function getProjectCount() public view returns (uint) {
 	    return (projectCount);
 	}
-	
+
+	//Donate amount cusd for project
 	function donate(uint _index, uint _amount) public payable  {
 		require(
 		  IERC20Token(cUsdTokenAddress).transferFrom(
@@ -84,9 +91,10 @@ contract fundraising {
 			projects[_index].owner,
 			_amount
 		  ),
-		  "Transfer failed."
+		  "Donate failed."
 		);
-		projectBalances[_index] += _amount;
+		//Increase balance
+		increaseBalance(_index, _amount);
 	}
 	
     
